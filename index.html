@@ -10,6 +10,7 @@
     <h1>CURD users</h1>
     <form action="/create" method="POST">
         <input type="text" name="name" placeholder="Name" required>
+        <input type="text" name="mssv" placeholder="MSSV" required>
         <button type="submit">Create User</button>
     </form>
     <h2>Users List</h2>
@@ -28,7 +29,7 @@
             const div = document.createElement('div');
             div.classList.add('user');
             div.innerHTML = `
-                <p>${user.id} - ${user.name} 
+                <p>${user.id} - ${user.name} - ${user.mssv}</p> 
                     <button class="delete" onclick="deleteUser(${user.id})" data-id="${user.id}">Delete</button>
                 <button class="update" onclick="updateUser(${user.id})" data-id="${user.id}">Update</button>
                     </p>
@@ -49,12 +50,15 @@
     }
     async function updateUser(id) {
         const name = prompt('Enter new name:');
+        if (!name) return;
+        const mssv = prompt('Enter new mssv:');
+        if (!mssv) return;
         await fetch(`https://67da306935c87309f52b515a.mockapi.io/api/users/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name })
+            body: JSON.stringify({ name, mssv })
         });
         fetchUsers();
     }
@@ -63,12 +67,13 @@
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = form.name.value;
+        const mssv = form.mssv.value;
         await fetch('https://67da306935c87309f52b515a.mockapi.io/api/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name })
+            body: JSON.stringify({ name, mssv })
         });
         form.reset();
         fetchUsers();
